@@ -51,10 +51,24 @@ function renderTasks() {
     });
     // creating new text to connect with the list item
     const newContent = document.createTextNode(element.task);
+    // creating a button to delete tasks
+    const deleteButton = document.createElement("button");
+    deleteButton.innerHTML = "Delete";
+    // adding a eventlistener to the delete button
+    deleteButton.addEventListener("click", function() {
+        // storing the index of the task to be deleted
+        const delIndex = tasks.findIndex((elementAtual) => elementAtual.id == element.id);
+        // deleting the one task from the array
+        tasks.splice(delIndex, 1);
+        // rendering the tasks again to update the list
+        renderTasks();
+    })
     // connecting list item with the checkbox
     newItem.appendChild(checkItem);
     // connecting list item with the text
     newItem.appendChild(newContent);
+    // connecting list item with the delete button
+    newItem.appendChild(deleteButton);
     // connecting list item with the ul list
     list.appendChild(newItem);
   });
