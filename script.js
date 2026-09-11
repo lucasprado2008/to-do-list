@@ -53,6 +53,7 @@ function renderTasks() {
     const newContent = document.createTextNode(element.task);
     // creating a button to delete tasks
     const deleteButton = document.createElement("button");
+    // setting the text of the button to Delete
     deleteButton.innerHTML = "Delete";
     // adding a eventlistener to the delete button
     deleteButton.addEventListener("click", function() {
@@ -63,10 +64,22 @@ function renderTasks() {
         // rendering the tasks again to update the list
         renderTasks();
     })
+    // creating a button to edit tasks
+    const editButton = document.createElement("button");
+    // setting the text of the button to Edit
+    editButton.innerHTML = "Edit";
+    // adding a eventlistener to the edit button
+    editButton.addEventListener("click", function() {
+        const newTask = prompt('Edit task');
+        element.task = newTask;
+        renderTasks();
+    });
     // connecting list item with the checkbox
     newItem.appendChild(checkItem);
     // connecting list item with the text
     newItem.appendChild(newContent);
+    // connecting list item with the edit button
+    newItem.appendChild(editButton);
     // connecting list item with the delete button
     newItem.appendChild(deleteButton);
     // connecting list item with the ul list
