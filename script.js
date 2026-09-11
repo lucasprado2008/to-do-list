@@ -124,27 +124,16 @@ function createTask(element) {
 }
 
 function loadState() {
-  console.log("Loading state...");
-
-  const storedTasks = localStorage.getItem("tasks");
-  console.log("Stored tasks:", storedTasks);
-
-  if (storedTasks === null) {
-    tasks = [];
-    console.log("No saved tasks found.");
-  } else {
-    tasks = JSON.parse(storedTasks);
-    console.log("Tasks loaded:", tasks);
-
-    const ids = tasks.map((task) => task.id);
-    console.log("Task IDs:", ids);
-
-    let maxId = Math.max(...ids);
-    console.log("Highest ID:", maxId);
-
-    taskCount = maxId + 1;
-    console.log("Next task ID:", taskCount);
-  }
+    const storedTasks = localStorage.getItem("tasks");
+    if (storedTasks === null) {
+        tasks = [];
+    }
+    else {
+        tasks = JSON.parse(storedTasks);
+        const ids = tasks.map(task => task.id);
+        let maxId = Math.max(...ids);
+        taskCount = maxId + 1;
+    }
 }
 
 function storeState() {
