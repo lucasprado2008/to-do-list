@@ -5,6 +5,9 @@ const list = document.getElementById("listTask");
 let tasks = [];
 let taskCount = 1;
 
+loadState();
+renderTasks();
+
 form.addEventListener("submit", function (event) {
   // prevent the default action of the form submitting (refreshing the page)
   event.preventDefault();
@@ -22,17 +25,19 @@ function createTaskData(inputValue) {
 
   const obj = {
     // creating a property for the task status
-    finished : false,
+    finished: false,
     // creating a property for the task
-    task : inputValue,
+    task: inputValue,
     // creating a property for the task id
-    id : taskCount,
+    id: taskCount,
   };
 
   // increasing the task count
   taskCount++;
   // adding the object to the tasks array
   tasks.push(obj);
+  // storing data in local storage
+  storeState();
 }
 
 function renderTasks() {
@@ -53,6 +58,8 @@ function deleteTask(element) {
   );
   // deleting the one task from the array
   tasks.splice(delIndex, 1);
+  // storing data in local storage
+  storeState();
   // rendering the tasks again to update the list
   renderTasks();
 }
@@ -62,6 +69,8 @@ function editTask(element) {
   const newTask = prompt("Edit task");
   // updating the task with the new one
   element.task = newTask;
+  // storing data in local storage
+  storeState();
   // rendering the tasks again to update the list
   renderTasks();
 }
@@ -81,6 +90,8 @@ function createTask(element) {
   // creating event listener for the checkbox
   checkItem.addEventListener("change", function () {
     element.finished = checkItem.checked;
+    // storing data in local storage
+    storeState();
   });
   // creating new text to connect with the list item
   const newContent = document.createTextNode(element.task);
@@ -110,4 +121,33 @@ function createTask(element) {
   newItem.appendChild(deleteButton);
 
   return newItem;
+}
+
+function loadState() {
+  console.log("Loading state...");
+
+  const storedTasks = localStorage.getItem("tasks");
+  console.log("Stored tasks:", storedTasks);
+
+  if (storedTasks === null) {
+    tasks = [];
+    console.log("No saved tasks found.");
+  } else {
+    tasks = JSON.parse(storedTasks);
+    console.log("Tasks loaded:", tasks);
+
+    const ids = tasks.map((task) => task.id);
+    console.log("Task IDs:", ids);
+
+    let maxId = Math.max(...ids);
+    console.log("Highest ID:", maxId);
+
+    taskCount = maxId + 1;
+    console.log("Next task ID:", taskCount);
+  }
+}
+
+function storeState() {
+  const stringJson = JSON.stringify(tasks);
+  localStorage.setItem("tasks", stringJson);
 }
