@@ -5,16 +5,14 @@ const list = document.getElementById("listTask");
 let tasks = [];
 let taskCount = 1;
 
-// load the tasks from local storage
+// load saved tasks before rendering the list
 loadState();
-// rendering the tasks on the page
 renderTasks();
 
 form.addEventListener("submit", function (event) {
-  // prevent the default action of the form submitting (refreshing the page)
+  // prevent refreshing the page (default of submit event)
   event.preventDefault();
 
-  // getting the value of the input field
   const inputValue = input.value.trim();
 
   if (inputValue === "") {
@@ -23,62 +21,56 @@ form.addEventListener("submit", function (event) {
     return;
   }
 
-  // calling the function to create the task data
   createTaskData(inputValue);
-
   resetInput();
-
-  // rendering the tasks on the page
   renderTasks();
 });
 
-function createTaskData(inputValue) {
-  // CREATING OBJECT
+form.addEventListener('reset', function (event) {
+  // prevent clearing the form (default of reset event)
+  event.preventDefault();
+  clearList();
+});
 
+function createTaskData(inputValue) {
   const obj = {
-    // creating a property for the task status
+    // creating properties for the object
     finished: false,
-    // creating a property for the task
     task: inputValue,
-    // creating a property for the task id
     id: taskCount,
   };
 
-  // increasing the task count
   taskCount++;
-  // adding the object to the tasks array
   tasks.push(obj);
-  // storing data in local storage
   storeState();
 }
 
 function renderTasks() {
-  // clearing the list before rendering the new tasks
   list.innerHTML = "";
 
   tasks.forEach((element) => {
     const listItem = createTask(element);
-    // connecting list item with the ul list
     list.appendChild(listItem);
   });
 }
 
 function deleteTask(element) {
-  // storing the index of the task to be deleted
+  const result = window.confirm("Are you sure you want to delete this task?");
+  if (!result) {
+    return;
+  }
+
   const delIndex = tasks.findIndex(
     (elementAtual) => elementAtual.id === element.id,
   );
-  // deleting the one task from the array
   tasks.splice(delIndex, 1);
-  // storing data in local storage
   storeState();
-  // rendering the tasks again to update the list
   renderTasks();
 }
 
 function editTask(element) {
-  // getting the new task from the user input
   let newTask = prompt("Edit task");
+
   if (newTask === null) {
     return;
   }
@@ -90,90 +82,85 @@ function editTask(element) {
     return;
   }
 
-  // updating the task with the new one
   element.task = newTask;
-  // storing data in local storage
   storeState();
-  // rendering the tasks again to update the list
+  renderTasks();
+}
+
+function clearList () {
+  const result = window.confirm("Are you sure you want to clear the list?");
+  if (!result) {
+    return;
+  }
+  tasks = [];
+  storeState();
   renderTasks();
 }
 
 function createTask(element) {
-  // CREATING LIST
-
-  // creating new list item
   const newItem = document.createElement("li");
   newItem.className = "task";
-  // creating new checkbox
+
   const checkItem = document.createElement("input");
-  // setting the type of the input to checkbox
   checkItem.type = "checkbox";
-  // setting the actual state of the checkbox to the task status
   checkItem.checked = element.finished;
-  // creating event listener for the checkbox
   checkItem.addEventListener("change", function () {
     element.finished = checkItem.checked;
-    // storing data in local storage
     storeState();
   });
-  // creating new text to connect with the list item
-  const newContent = document.createTextNode(element.task);
-  // creating a button to delete tasks
+
+
+  const newContent = document.createElement('span');
+  newContent.textContent = element.task;
+  newContent.className = "taskText";
+
   const deleteButton = document.createElement("button");
-  // setting the text of the button to Delete
-  deleteButton.textContent = "Delete";
-  // adding a eventlistener to the delete button
+  deleteButton.textContent = "🗑️";
+  deleteButton.className = "buttonLi delete"
   deleteButton.addEventListener("click", function () {
     deleteTask(element);
   });
-  // creating a button to edit tasks
+
   const editButton = document.createElement("button");
-  // setting the text of the button to Edit
-  editButton.textContent = "Edit";
-  // adding a eventlistener to the edit button
+  editButton.textContent = "📝";
+  editButton.className = "buttonLi edit";
   editButton.addEventListener("click", function () {
     editTask(element);
   });
-  // connecting list item with the checkbox
+
   newItem.appendChild(checkItem);
-  // connecting list item with the text
   newItem.appendChild(newContent);
-  // connecting list item with the edit button
   newItem.appendChild(editButton);
-  // connecting list item with the delete button
   newItem.appendChild(deleteButton);
 
-  // return a list item with all the elements
   return newItem;
 }
 
-// function to get the local storage data and load it into the tasks array
 function loadState() {
-  // storing the data from local storage into the storedTasks variable
   const storedTasks = localStorage.getItem("tasks");
-  // checking if the storedTasks variable is null
+
   if (storedTasks === null) {
-    // returning an empty array if it's null
     tasks = [];
   }
-  // if it's not null
   else {
-    // parsing the storedTasks variable into a JSON object
+    // parsing the stored JSON string into a JavaScript value
     tasks = JSON.parse(storedTasks);
-    // creating an array with the ids of all the tasks
+    if(tasks.length === 0) {
+      taskCount = 1;
+      return;
+    }
+    // for each task in the tasks array, store its id in the ids array
     const ids = tasks.map((task) => task.id);
-    // getting the maximum id from the ids array
+    // getting the maximum id, ... spread the array into individual values
     let maxId = Math.max(...ids);
-    // incrementing the maxId by 1 to get the next id for the new task
     taskCount = maxId + 1;
   }
 }
 
-// function to store the tasks array into the local storage
 function storeState() {
-  // parsing the tasks array into a JSON string
+  // converting the tasks array into a JSON string
   const stringJson = JSON.stringify(tasks);
-  // storing the JSON string into the local storage
+  // key identifies the stored data, value is the data itself
   localStorage.setItem("tasks", stringJson);
 }
 
