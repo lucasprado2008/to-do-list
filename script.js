@@ -15,10 +15,18 @@ form.addEventListener("submit", function (event) {
   event.preventDefault();
 
   // getting the value of the input field
-  const inputValue = input.value;
+  const inputValue = input.value.trim();
+
+  if (inputValue === "") {
+    window.alert("Please enter a task");
+    resetInput();
+    return;
+  }
 
   // calling the function to create the task data
   createTaskData(inputValue);
+
+  resetInput();
 
   // rendering the tasks on the page
   renderTasks();
@@ -70,7 +78,18 @@ function deleteTask(element) {
 
 function editTask(element) {
   // getting the new task from the user input
-  const newTask = prompt("Edit task");
+  let newTask = prompt("Edit task");
+  if (newTask === null) {
+    return;
+  }
+
+  newTask = newTask.trim();
+
+  if(newTask === "") {
+    alert("Task can't be empty! Please, try again");
+    return;
+  }
+
   // updating the task with the new one
   element.task = newTask;
   // storing data in local storage
@@ -130,24 +149,24 @@ function createTask(element) {
 
 // function to get the local storage data and load it into the tasks array
 function loadState() {
-    // storing the data from local storage into the storedTasks variable
-    const storedTasks = localStorage.getItem("tasks");
-    // checking if the storedTasks variable is null
-    if (storedTasks === null) {
-        // returning an empty array if it's null
-        tasks = [];
-    }
-    // if it's not null
-    else {
-        // parsing the storedTasks variable into a JSON object
-        tasks = JSON.parse(storedTasks);
-        // creating an array with the ids of all the tasks
-        const ids = tasks.map(task => task.id);
-        // getting the maximum id from the ids array
-        let maxId = Math.max(...ids);
-        // incrementing the maxId by 1 to get the next id for the new task
-        taskCount = maxId + 1;
-    }
+  // storing the data from local storage into the storedTasks variable
+  const storedTasks = localStorage.getItem("tasks");
+  // checking if the storedTasks variable is null
+  if (storedTasks === null) {
+    // returning an empty array if it's null
+    tasks = [];
+  }
+  // if it's not null
+  else {
+    // parsing the storedTasks variable into a JSON object
+    tasks = JSON.parse(storedTasks);
+    // creating an array with the ids of all the tasks
+    const ids = tasks.map((task) => task.id);
+    // getting the maximum id from the ids array
+    let maxId = Math.max(...ids);
+    // incrementing the maxId by 1 to get the next id for the new task
+    taskCount = maxId + 1;
+  }
 }
 
 // function to store the tasks array into the local storage
@@ -156,4 +175,9 @@ function storeState() {
   const stringJson = JSON.stringify(tasks);
   // storing the JSON string into the local storage
   localStorage.setItem("tasks", stringJson);
+}
+
+function resetInput() {
+  input.value = "";
+  input.focus();
 }
