@@ -131,6 +131,15 @@ form button:focus-visible {
 
 .task input[type="checkbox"] {
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.task input[type="checkbox"]:hover {
+  transform: scale(1.1);
+}
+
+.task input[type="checkbox"]:active {
+  transform: scale(1);
 }
 
 .taskText {

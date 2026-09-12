@@ -16,7 +16,7 @@ form.addEventListener("submit", function (event) {
   const inputValue = input.value.trim();
 
   if (inputValue === "") {
-    window.alert("Please enter a task");
+    alert("Please enter a task");
     resetInput();
     return;
   }
@@ -26,7 +26,7 @@ form.addEventListener("submit", function (event) {
   renderTasks();
 });
 
-form.addEventListener('reset', function (event) {
+form.addEventListener("reset", function (event) {
   // prevent clearing the form (default of reset event)
   event.preventDefault();
   clearList();
@@ -55,7 +55,7 @@ function renderTasks() {
 }
 
 function deleteTask(element) {
-  const result = window.confirm("Are you sure you want to delete this task?");
+  const result = confirm("Are you sure you want to delete this task?");
   if (!result) {
     return;
   }
@@ -77,7 +77,7 @@ function editTask(element) {
 
   newTask = newTask.trim();
 
-  if(newTask === "") {
+  if (newTask === "") {
     alert("Task can't be empty! Please, try again");
     return;
   }
@@ -87,8 +87,8 @@ function editTask(element) {
   renderTasks();
 }
 
-function clearList () {
-  const result = window.confirm("Are you sure you want to clear the list?");
+function clearList() {
+  const result = confirm("Are you sure you want to clear the list?");
   if (!result) {
     return;
   }
@@ -110,14 +110,14 @@ function createTask(element) {
   });
 
 
-  const newContent = document.createElement('span');
+  const newContent = document.createElement("span");
   newContent.textContent = element.task;
   newContent.className = "taskText";
 
   const deleteButton = document.createElement("button");
   deleteButton.textContent = "🗑️";
-  deleteButton.className = "buttonLi delete"
-  deleteButton.ariaLabel = "Delete"
+  deleteButton.className = "buttonLi delete";
+  deleteButton.ariaLabel = "Delete";
   deleteButton.addEventListener("click", function () {
     deleteTask(element);
   });
@@ -125,7 +125,7 @@ function createTask(element) {
   const editButton = document.createElement("button");
   editButton.textContent = "📝";
   editButton.className = "buttonLi edit";
-  editButton.ariaLabel = "Edit"
+  editButton.ariaLabel = "Edit";
   editButton.addEventListener("click", function () {
     editTask(element);
   });
