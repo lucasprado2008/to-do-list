@@ -5,15 +5,19 @@ const list = document.getElementById("listTask");
 let tasks = [];
 let taskCount = 1;
 
+// load the tasks from local storage
 loadState();
+// rendering the tasks on the page
 renderTasks();
 
 form.addEventListener("submit", function (event) {
   // prevent the default action of the form submitting (refreshing the page)
   event.preventDefault();
 
+  // getting the value of the input field
   const inputValue = input.value;
 
+  // calling the function to create the task data
   createTaskData(inputValue);
 
   // rendering the tasks on the page
@@ -120,23 +124,36 @@ function createTask(element) {
   // connecting list item with the delete button
   newItem.appendChild(deleteButton);
 
+  // return a list item with all the elements
   return newItem;
 }
 
+// function to get the local storage data and load it into the tasks array
 function loadState() {
+    // storing the data from local storage into the storedTasks variable
     const storedTasks = localStorage.getItem("tasks");
+    // checking if the storedTasks variable is null
     if (storedTasks === null) {
+        // returning an empty array if it's null
         tasks = [];
     }
+    // if it's not null
     else {
+        // parsing the storedTasks variable into a JSON object
         tasks = JSON.parse(storedTasks);
+        // creating an array with the ids of all the tasks
         const ids = tasks.map(task => task.id);
+        // getting the maximum id from the ids array
         let maxId = Math.max(...ids);
+        // incrementing the maxId by 1 to get the next id for the new task
         taskCount = maxId + 1;
     }
 }
 
+// function to store the tasks array into the local storage
 function storeState() {
+  // parsing the tasks array into a JSON string
   const stringJson = JSON.stringify(tasks);
+  // storing the JSON string into the local storage
   localStorage.setItem("tasks", stringJson);
 }
