@@ -117,6 +117,7 @@ function createTask(element) {
   const deleteButton = document.createElement("button");
   deleteButton.textContent = "🗑️";
   deleteButton.className = "buttonLi delete"
+  deleteButton.ariaLabel = "Delete"
   deleteButton.addEventListener("click", function () {
     deleteTask(element);
   });
@@ -124,6 +125,7 @@ function createTask(element) {
   const editButton = document.createElement("button");
   editButton.textContent = "📝";
   editButton.className = "buttonLi edit";
+  editButton.ariaLabel = "Edit"
   editButton.addEventListener("click", function () {
     editTask(element);
   });
